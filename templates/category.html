@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% from "_macros.html" import pagination, article_card %}
+
+{% block title %}分类：{{ category.name }} - 我的技术博客{% endblock %}
+
+{% block content %}
+<h1 class="page-title">📂 分类：{{ category.name }} <small>共 {{ total }} 篇</small></h1>
+{% for article in articles %}
+    {{ article_card(article) }}
+{% else %}
+    <div class="empty-state">该分类下暂无文章。</div>
+{% endfor %}
+{{ pagination('category', page, pages, extra={'category_id': category.id}) }}
+{% endblock %}

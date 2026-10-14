@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}后台管理 - 我的技术博客{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>⚙️ 后台管理</h1>
+    <a class="btn btn-primary" href="{{ url_for('admin_article_new') }}">✚ 写新文章</a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card"><span class="stat-num">{{ stats.articles }}</span><span class="stat-label">文章</span></div>
+    <div class="stat-card"><span class="stat-num">{{ stats.categories }}</span><span class="stat-label">分类</span></div>
+    <div class="stat-card"><span class="stat-num">{{ stats.tags }}</span><span class="stat-label">标签</span></div>
+    <div class="stat-card"><span class="stat-num">{{ stats.views }}</span><span class="stat-label">总阅读</span></div>
+</div>
+
+<div class="admin-grid">
+    <section class="admin-panel">
+        <h3>文章管理</h3>
+        <table class="admin-table">
+            <thead>
+                <tr><th>标题</th><th>分类</th><th>发布时间</th><th>阅读</th><th>操作</th></tr>
+            </thead>
+            <tbody>
+                {% for a in articles %}
+                <tr>
+                    <td><a href="{{ url_for('article_detail', article_id=a.id) }}">{{ a.title }}</a></td>
+                    <td>{{ a.category_name or '-' }}</td>
+                    <td>{{ a.created_at[:10] }}</td>
+                    <td>{{ a.views }}</td>
+                    <td class="actions">
+                        <a class="btn btn-sm" href="{{ url_for('admin_article_edit', article_id=a.id) }}">编辑</a>
+                        <form method="post" action="{{ url_for('admin_article_delete', article_id=a.id) }}"
+                              onsubmit="return confirm('确定删除《{{ a.title }}》吗？');">
+                            <button type="submit" class="btn btn-sm btn-danger">删除</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="empty-state">暂无文章</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <section class="admin-panel">
+        <h3>新建分类</h3>
+        <form method="post" action="{{ url_for('admin_category_new') }}" class="inline-form">
+            <input type="text" name="name" placeholder="分类名称" required>
+            <button type="submit" class="btn btn-primary">添加</button>
+        </form>
+        <ul class="widget-list category-manage">
+            {% for c in categories %}
+            <li><a href="{{ url_for('category', category_id=c.id) }}">{{ c.name }}</a>
+                <span class="count">{{ c.article_count }}</span></li>
+            {% endfor %}
+        </ul>
+    </section>
+</div>
+{% endblock %}

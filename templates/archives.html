@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}归档 - 我的技术博客{% endblock %}
+
+{% block content %}
+<h1 class="page-title">📅 文章归档</h1>
+{% for year, articles in archives %}
+<section class="archive-year">
+    <h2>{{ year }} <small>{{ articles | length }} 篇</small></h2>
+    <ul class="archive-list">
+        {% for a in articles %}
+        <li>
+            <span class="archive-date">{{ a.created_at[5:10] }}</span>
+            <a href="{{ url_for('article_detail', article_id=a.id) }}">{{ a.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% else %}
+    <div class="empty-state">暂无文章。</div>
+{% endfor %}
+{% endblock %}

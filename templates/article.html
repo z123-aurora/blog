@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }} - 我的技术博客{% endblock %}
+
+{% block content %}
+<div class="article-page">
+    <article class="article-full">
+        <header class="article-header">
+            <h1 class="article-title">{{ article.title }}</h1>
+            <div class="article-meta">
+                {% if article.category_name %}
+                    <a class="meta-tag category" href="{{ url_for('category', category_id=article.category_id) }}">{{ article.category_name }}</a>
+                {% endif %}
+                <span>📅 {{ article.created_at[:10] }}</span>
+                <span>👁 {{ article.views }} 阅读</span>
+                {% if article.updated_at[:10] != article.created_at[:10] %}
+                    <span>✏️ 更新于 {{ article.updated_at[:10] }}</span>
+                {% endif %}
+            </div>
+            {% if tags %}
+            <div class="tag-cloud">
+                {% for t in tags %}
+                <a class="tag" href="{{ url_for('tag', tag_id=t.id) }}"># {{ t.name }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </header>
+
+        <div class="article-body">{{ article.content | markdown | safe }}</div>
+    </article>
+
+    <nav class="article-nav">
+        {% if prev_art %}
+            <a class="prev" href="{{ url_for('article_detail', article_id=prev_art.id) }}">← {{ prev_art.title }}</a>
+        {% else %}<span></span>{% endif %}
+        {% if next_art %}
+            <a class="next" href="{{ url_for('article_detail', article_id=next_art.id) }}">{{ next_art.title }} →</a>
+        {% endif %}
+    </nav>
+
+    {% if related %}
+    <section class="related">
+        <h3>📚 相关文章</h3>
+        <ul class="widget-list">
+            {% for r in related %}
+            <li><a href="{{ url_for('article_detail', article_id=r.id) }}">{{ r.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base_v2.html" %}
+{% from "_macros.html" import pagination, article_card %}
+
+{% block title %}我的技术博客（版本二）{% endblock %}
+
+{% block content %}
+<div class="layout">
+    <div class="content-col">
+        <div class="banner banner-v2">
+            <img src="{{ url_for('static', filename='Banner2.png') }}" alt="个人技术博客 Banner 版本二">
+        </div>
+
+        {% for article in articles %}
+            {{ article_card(article) }}
+        {% else %}
+            <div class="empty-state">暂无文章，快去后台发布第一篇吧。</div>
+        {% endfor %}
+
+        {{ pagination('index_dark', page, pages) }}
+    </div>
+
+    <aside class="sidebar">
+        <section class="widget">
+            <h3>📂 分类</h3>
+            <ul class="widget-list">
+                {% for c in categories %}
+                <li>
+                    <a href="{{ url_for('category', category_id=c.id) }}">{{ c.name }}</a>
+                    <span class="count">{{ c.article_count }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="widget">
+            <h3>🏷 标签</h3>
+            <div class="tag-cloud">
+                {% for t in popular_tags %}
+                <a class="tag" href="{{ url_for('tag', tag_id=t.id) }}">{{ t.name }}</a>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="widget">
+            <h3>🆕 最新文章</h3>
+            <ul class="widget-list">
+                {% for a in latest %}
+                <li><a href="{{ url_for('article_detail', article_id=a.id) }}">{{ a.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="widget version-switch-widget">
+            <h3>🎨 界面版本</h3>
+            <p class="switch-tip">当前为 <strong>版本二</strong>（深色科技风）</p>
+            <a class="btn btn-primary btn-block" href="{{ url_for('index') }}">切换回版本一</a>
+        </section>
+    </aside>
+</div>
+{% endblock %}

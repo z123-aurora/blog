@@ -1,0 +1,36 @@
+{% macro pagination(endpoint, page, pages, extra={}) %}
+{% if pages > 1 %}
+<nav class="pagination">
+    {% if page > 1 %}
+        <a href="{{ url_for(endpoint, page=page-1, **extra) }}">« 上一页</a>
+    {% endif %}
+    {% for p in range(1, pages + 1) %}
+        {% if p == page %}
+            <span class="current">{{ p }}</span>
+        {% else %}
+            <a href="{{ url_for(endpoint, page=p, **extra) }}">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page < pages %}
+        <a href="{{ url_for(endpoint, page=page+1, **extra) }}">下一页 »</a>
+    {% endif %}
+</nav>
+{% endif %}
+{% endmacro %}
+
+{% macro article_card(article) %}
+<article class="article-card">
+    <h2 class="card-title">
+        <a href="{{ url_for('article_detail', article_id=article.id) }}">{{ article.title }}</a>
+    </h2>
+    <div class="card-meta">
+        {% if article.category_name %}
+            <a class="meta-tag category" href="{{ url_for('category', category_id=article.category_id) }}">{{ article.category_name }}</a>
+        {% endif %}
+        <span>{{ article.created_at[:10] }}</span>
+        <span>👁 {{ article.views }} 阅读</span>
+    </div>
+    <p class="card-summary">{{ article.summary or (article.content[:120] ~ '...') }}</p>
+    <a class="read-more" href="{{ url_for('article_detail', article_id=article.id) }}">阅读全文 →</a>
+</article>
+{% endmacro %}

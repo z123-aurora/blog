@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}我的技术博客（版本二）{% endblock %}</title>
+    <!-- 版本二：先加载公共样式，再用 style_v2.css 做深色赛博风覆盖；原 style.css 未改动 -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='Logo2.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='Logo2.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_v2.css') }}">
+</head>
+<body class="theme-v2">
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="{{ url_for('index_dark') }}" class="logo">
+                <img src="{{ url_for('static', filename='Logo2.png') }}" alt="个人技术博客 Logo 版本二" class="logo-img">
+                <span class="logo-text">个人技术博客</span>
+                <span class="version-badge">V2</span>
+            </a>
+            <nav class="nav">
+                <a href="{{ url_for('index_dark') }}" class="{{ 'active' if request.endpoint == 'index_dark' }}">首页</a>
+                <a href="{{ url_for('archives') }}">归档</a>
+                {% if session.logged_in %}
+                    <a href="{{ url_for('admin') }}">后台</a>
+                    <a href="{{ url_for('logout') }}">退出</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">登录</a>
+                {% endif %}
+                <a href="{{ url_for('index') }}" class="switch-version" title="切换到原版本">🔄 版本一</a>
+            </nav>
+            <form class="search-form" action="{{ url_for('search') }}" method="get">
+                <input type="text" name="q" placeholder="搜索文章..." value="{{ keyword or '' }}">
+                <button type="submit">搜索</button>
+            </form>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-list">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>© 2026 个人技术博客（版本二 · 深色科技风） · 用 Python + Flask 构建</p>
+        </div>
+    </footer>
+</body>
+</html>

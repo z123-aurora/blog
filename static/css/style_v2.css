@@ -1,0 +1,174 @@
+/* ==========================================================
+   版本二样式（深色科技风）
+   所有规则都限定在 body.theme-v2 作用域内，
+   与原 style.css 并存加载，版本一页面外观完全不受影响。
+   ========================================================== */
+
+body.theme-v2 {
+    /* 覆盖根变量：整页换深色配色 */
+    --bg: #0a1020;
+    --card: #111c33;
+    --text: #e6f0ff;
+    --text-light: #8fa3c4;
+    --border: #1e3150;
+    --primary: #22d3ee;
+    --primary-dark: #06b6d4;
+    background:
+        radial-gradient(1200px 500px at 80% -10%, rgba(34, 211, 238, 0.10), transparent 60%),
+        radial-gradient(900px 400px at 0% 0%, rgba(124, 58, 237, 0.12), transparent 55%),
+        var(--bg);
+}
+
+/* ---------- 页头 ---------- */
+body.theme-v2 .site-header {
+    background: rgba(10, 16, 32, 0.85);
+    border-bottom: 1px solid rgba(34, 211, 238, 0.25);
+    backdrop-filter: blur(8px);
+}
+
+body.theme-v2 .logo-text {
+    background: linear-gradient(90deg, #67e8f9, #a78bfa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+body.theme-v2 .logo-img {
+    border-radius: 10px;
+    border: 1px solid rgba(34, 211, 238, 0.55);
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.45);
+}
+
+body.theme-v2 .version-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #0a1020;
+    background: linear-gradient(90deg, #22d3ee, #a78bfa);
+    border-radius: 999px;
+    padding: 1px 8px;
+    line-height: 1.6;
+}
+
+body.theme-v2 .nav a:hover,
+body.theme-v2 .nav a.active {
+    background: rgba(34, 211, 238, 0.14);
+    color: #67e8f9;
+}
+
+body.theme-v2 .switch-version {
+    border: 1px solid rgba(34, 211, 238, 0.4);
+    border-radius: 999px;
+    font-size: 0.82rem;
+}
+
+body.theme-v2 .search-form input {
+    background: #0d1730;
+    border-color: var(--border);
+    color: var(--text);
+}
+
+body.theme-v2 .search-form button {
+    background: linear-gradient(90deg, #0891b2, #7c3aed);
+}
+
+/* ---------- Banner ---------- */
+body.theme-v2 .banner-v2 {
+    border: 1px solid rgba(34, 211, 238, 0.35);
+    box-shadow: 0 0 28px rgba(34, 211, 238, 0.18);
+}
+
+/* ---------- 文章卡片 / 侧栏组件 ---------- */
+body.theme-v2 .article-card,
+body.theme-v2 .widget,
+body.theme-v2 .archive-year,
+body.theme-v2 .related,
+body.theme-v2 .empty-state {
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.04);
+}
+
+body.theme-v2 .article-card:hover {
+    border-color: rgba(34, 211, 238, 0.5);
+    box-shadow: 0 4px 22px rgba(34, 211, 238, 0.15);
+}
+
+body.theme-v2 .card-title a { color: var(--text); }
+body.theme-v2 .card-title a:hover { color: #67e8f9; }
+
+body.theme-v2 .meta-tag.category {
+    background: rgba(34, 211, 238, 0.12);
+    color: #67e8f9;
+}
+
+body.theme-v2 .widget h3 { border-bottom-color: var(--border); }
+body.theme-v2 .widget-list li a { color: var(--text); }
+body.theme-v2 .widget-list li a:hover { color: #67e8f9; }
+body.theme-v2 .widget-list .count { background: #0d1730; color: var(--text-light); }
+
+body.theme-v2 .tag {
+    background: #0d1730;
+    border-color: var(--border);
+    color: var(--text-light);
+}
+body.theme-v2 .tag:hover { border-color: #22d3ee; color: #67e8f9; }
+
+body.theme-v2 .archive-list li { border-bottom-color: var(--border); }
+body.theme-v2 .archive-list a { color: var(--text); }
+body.theme-v2 .archive-list a:hover { color: #67e8f9; }
+
+body.theme-v2 .article-nav a { background: var(--card); border: 1px solid var(--border); color: var(--text); }
+body.theme-v2 .article-nav a:hover { border-color: #22d3ee; color: #67e8f9; }
+
+body.theme-v2 .article-header { border-bottom-color: var(--border); }
+body.theme-v2 .article-full { background: var(--card); border: 1px solid var(--border); }
+
+body.theme-v2 .article-body blockquote {
+    background: rgba(34, 211, 238, 0.08);
+    border-left-color: #22d3ee;
+    color: #b6c8e8;
+}
+body.theme-v2 .article-body code { background: #0d1730; color: #67e8f9; }
+body.theme-v2 .article-body th { background: #0d1730; }
+body.theme-v2 .article-body th,
+body.theme-v2 .article-body td { border-color: var(--border); }
+
+/* ---------- 分页 / 按钮 ---------- */
+body.theme-v2 .pagination a,
+body.theme-v2 .pagination .current {
+    background: var(--card);
+    border-color: var(--border);
+    color: var(--text);
+}
+body.theme-v2 .pagination a:hover { border-color: #22d3ee; color: #67e8f9; }
+body.theme-v2 .pagination .current {
+    background: linear-gradient(90deg, #0891b2, #7c3aed);
+    border-color: transparent;
+}
+
+body.theme-v2 .btn {
+    background: var(--card);
+    border-color: var(--border);
+    color: var(--text);
+}
+body.theme-v2 .btn:hover { border-color: #22d3ee; color: #67e8f9; }
+body.theme-v2 .btn-primary {
+    background: linear-gradient(90deg, #0891b2, #7c3aed);
+    border-color: transparent;
+    color: #fff;
+}
+body.theme-v2 .btn-primary:hover { color: #fff; opacity: 0.92; }
+
+/* ---------- 侧栏版本切换小部件 ---------- */
+body.theme-v2 .version-switch-widget .switch-tip {
+    font-size: 0.88rem;
+    color: var(--text-light);
+    margin-bottom: 10px;
+}
+
+/* ---------- 页脚 ---------- */
+body.theme-v2 .site-footer {
+    background: rgba(10, 16, 32, 0.9);
+    border-top: 1px solid rgba(34, 211, 238, 0.2);
+    color: var(--text-light);
+}

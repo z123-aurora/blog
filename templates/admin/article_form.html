@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}{{ '编辑文章' if article else '写新文章' }} - 我的技术博客{% endblock %}
+
+{% block content %}
+<div class="editor-page">
+    <h1>{{ '✏️ 编辑文章' if article else '✚ 写新文章' }}</h1>
+
+    <form method="post" class="editor-form">
+        <div class="form-group">
+            <label for="title">标题</label>
+            <input type="text" id="title" name="title" required
+                   value="{{ article.title if article else '' }}" placeholder="文章标题">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="category_id">分类</label>
+                <select id="category_id" name="category_id" required>
+                    <option value="" disabled {{ 'selected' if not article }}>请选择分类</option>
+                    {% for c in categories %}
+                    <option value="{{ c.id }}"
+                        {{ 'selected' if article and article.category_id == c.id }}>{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="tags">标签（逗号分隔）</label>
+                <input type="text" id="tags" name="tags" value="{{ tags }}"
+                       placeholder="例如：Python, Flask, 教程">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="summary">摘要</label>
+            <textarea id="summary" name="summary" rows="2"
+                      placeholder="显示在列表页的简短摘要（可留空，自动截取正文）">{{ article.summary if article else '' }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="content">正文（支持 Markdown）</label>
+            <textarea id="content" name="content" rows="18" required
+                      placeholder="使用 Markdown 语法书写正文...">{{ article.content if article else '' }}</textarea>
+        </div>
+
+        <div class="editor-actions">
+            <a class="btn" href="{{ url_for('admin') }}">取消</a>
+            <button type="submit" class="btn btn-primary">{{ '保存修改' if article else '发布文章' }}</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
