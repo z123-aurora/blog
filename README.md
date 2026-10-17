@@ -1,1 +1,2 @@
 "# Blog Project" 
+"## Update Log" 
