@@ -50,12 +50,12 @@ def enumerate_urls():
         urls.append(f"/article/{row['id']}")
 
     for row in conn.execute(
-        "SELECT id, COUNT(*) c FROM articles WHERE category_id IS NOT NULL "
+        "SELECT category_id, COUNT(*) c FROM articles WHERE category_id IS NOT NULL "
         "GROUP BY category_id"
     ):
-        urls.append(f"/category/{row['id']}")
+        urls.append(f"/category/{row['category_id']}")
         for p in range(2, math.ceil(row["c"] / POSTS_PER_PAGE) + 1):
-            urls.append(f"/category/{row['id']}?page={p}")
+            urls.append(f"/category/{row['category_id']}?page={p}")
 
     for row in conn.execute(
         "SELECT tag_id, COUNT(DISTINCT article_id) c FROM article_tags GROUP BY tag_id"
@@ -110,9 +110,14 @@ def map_link(value):
     path = parts.path.rstrip("/") or "/"
 
     if path == "/":
-        return f"{PREFIX}/page-{page}.html" if page else f"{PREFIX}/"
+        # 第 1 页就是 index.html，避免 /page-1.html 悬空链接
+        if not page or page == "1":
+            return f"{PREFIX}/"
+        return f"{PREFIX}/page-{page}.html"
     if path == "/v2":
-        return f"{PREFIX}/v2-page-{page}.html" if page else f"{PREFIX}/v2.html"
+        if not page or page == "1":
+            return f"{PREFIX}/v2.html"
+        return f"{PREFIX}/v2-page-{page}.html"
     m = re.fullmatch(r"/article/(\d+)", path)
     if m:
         return f"{PREFIX}/article-{m.group(1)}.html"
@@ -188,6 +193,26 @@ SEARCH_JS = """
 """
 
 
+def snapshot_views():
+    """记录导出前的阅读数，导出结束后还原。
+
+    app.test_client 渲染文章详情页会触发 views + 1 并提交，
+    静态导出不应改变真实站点的统计数据。
+    """
+    conn = db()
+    views = {row["id"]: row["views"] for row in conn.execute("SELECT id, views FROM articles")}
+    conn.close()
+    return views
+
+
+def restore_views(views):
+    conn = db()
+    for article_id, count in views.items():
+        conn.execute("UPDATE articles SET views = ? WHERE id = ?", (count, article_id))
+    conn.commit()
+    conn.close()
+
+
 def build_search_index():
     conn = db()
     items = []
@@ -222,18 +247,22 @@ def main():
     urls = enumerate_urls()
     print(f"共 {len(urls)} 个页面待渲染，输出目录: {OUT_DIR}，链接前缀: {PREFIX}")
 
-    for url in urls:
-        resp = client.get(url)
-        if resp.status_code != 200:
-            print(f"  [跳过] {url} -> HTTP {resp.status_code}")
-            continue
-        html = rewrite_links(resp.get_data(as_text=True))
-        rel = url_to_file(url)
-        dest = os.path.join(OUT_DIR, rel)
-        os.makedirs(os.path.dirname(dest) or OUT_DIR, exist_ok=True)
-        with open(dest, "w", encoding="utf-8", newline="\n") as f:
-            f.write(html)
-        print(f"  [OK] {url} -> {rel}")
+    views_before = snapshot_views()
+    try:
+        for url in urls:
+            resp = client.get(url)
+            if resp.status_code != 200:
+                print(f"  [跳过] {url} -> HTTP {resp.status_code}")
+                continue
+            html = rewrite_links(resp.get_data(as_text=True))
+            rel = url_to_file(url)
+            dest = os.path.join(OUT_DIR, rel)
+            os.makedirs(os.path.dirname(dest) or OUT_DIR, exist_ok=True)
+            with open(dest, "w", encoding="utf-8", newline="\n") as f:
+                f.write(html)
+            print(f"  [OK] {url} -> {rel}")
+    finally:
+        restore_views(views_before)
 
     # 搜索页注入前端检索脚本 + 生成索引
     search_path = os.path.join(OUT_DIR, "search.html")
