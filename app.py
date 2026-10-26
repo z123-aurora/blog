@@ -300,7 +300,11 @@ def login():
         ):
             session["logged_in"] = True
             flash("登录成功", "success")
-            return redirect(request.args.get("next") or url_for("admin"))
+            next_url = request.args.get("next") or ""
+            # 只允许站内相对路径，避免 next 参数被用来做开放重定向
+            if not next_url.startswith("/") or next_url.startswith("//"):
+                next_url = url_for("admin")
+            return redirect(next_url)
         flash("用户名或密码错误", "error")
     return render_template("login.html")
 
@@ -333,9 +337,15 @@ def admin():
 @login_required
 def admin_article_new():
     if request.method == "POST":
-        _save_article(None)
-        flash("文章发布成功", "success")
-        return redirect(url_for("admin"))
+        if _save_article(None):
+            flash("文章发布成功", "success")
+            return redirect(url_for("admin"))
+        # 校验失败时保留用户输入，避免误报“发布成功”
+        return render_template(
+            "admin/article_form.html",
+            article=_article_from_form(),
+            tags=request.form.get("tags", ""),
+        )
     return render_template("admin/article_form.html", article=None, tags="")
 
 
@@ -346,11 +356,27 @@ def admin_article_edit(article_id):
     if art is None:
         abort(404)
     if request.method == "POST":
-        _save_article(article_id)
-        flash("文章更新成功", "success")
-        return redirect(url_for("admin"))
+        if _save_article(article_id):
+            flash("文章更新成功", "success")
+            return redirect(url_for("admin"))
+        return render_template(
+            "admin/article_form.html",
+            article=_article_from_form(article_id),
+            tags=request.form.get("tags", ""),
+        )
     tags = ", ".join(t["name"] for t in get_article_tags(article_id))
     return render_template("admin/article_form.html", article=art, tags=tags)
+
+
+def _article_from_form(article_id=None):
+    """把表单内容回填成模板所需的文章对象，校验失败时不丢用户输入。"""
+    return {
+        "id": article_id,
+        "title": request.form.get("title", ""),
+        "summary": request.form.get("summary", ""),
+        "content": request.form.get("content", ""),
+        "category_id": request.form.get("category_id", type=int),
+    }
 
 
 def _save_article(article_id):
@@ -361,7 +387,7 @@ def _save_article(article_id):
     tag_names = [t.strip() for t in request.form.get("tags", "").split(",") if t.strip()]
     if not title or not content or not category_id:
         flash("标题、内容和分类不能为空", "error")
-        return
+        return False
     db = get_db()
     if article_id is None:
         cur = db.execute(
@@ -385,6 +411,7 @@ def _save_article(article_id):
             (article_id, tag_id),
         )
     db.commit()
+    return True
 
 
 @app.route("/admin/article/delete/<int:article_id>", methods=["POST"])
