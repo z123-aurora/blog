@@ -8,7 +8,7 @@
 
 | 版本 | 地址 | 说明 |
 | --- | --- | --- |
-| 静态交付版 | <https://blog-d3gd2wmcb82959ac9-1511513920.tcloudbaseapp.com/blog4/> | `freeze_static.py` 导出的纯静态站点，可浏览文章、分类、标签、归档，支持前端索引搜索；不含后台与留言 |
+| 静态交付版 | <https://blog-d3gd2wmcb82959ac9-1511513920.tcloudbaseapp.com/blog4/> | `freeze_static.py` 导出的纯静态站点，可浏览文章、分类、标签、归档，支持前端索引搜索；后台不可用，文章页的留言区随页面一起导出（能否读写取决于云函数部署与匿名登录是否开启） |
 | 动态完整版 | <https://personal-tech-blog-10060.app.workbuddy.host/?sharecode=ZFCMKOTS27> | Flask 服务端实时渲染，功能完整；后台入口 `/login` |
 
 ## 功能列表
@@ -46,7 +46,7 @@
 | 内容渲染 | `markdown` 3.x，启用 `fenced_code`、`tables`、`nl2br` 扩展 |
 | 前端 | 原生 HTML / CSS / JavaScript，无框架、无构建步骤 |
 | 留言云能力 | CloudBase PostgreSQL 表 `comments` + 云函数 `addComment`、`listComments`（Node.js 20）+ Web SDK 2.17.3 |
-| 测试 | pytest 9 + pytest-cov，临时库隔离 |
+| 测试 | pytest 9（`pytest-cov` 已列为开发依赖，默认未启用覆盖率统计），临时库隔离 |
 | 部署 | Docker / CloudBase 云托管；静态交付用 CloudBase 静态网站托管 |
 
 目录结构：
@@ -55,7 +55,7 @@
 blog/
 ├── app.py                  # Flask 主应用：路由、分页、Markdown 过滤、登录保护
 ├── init_db.py              # 建表 SQL、种子数据、统一连接入口 create_connection()
-├── database.db             # SQLite 数据库（随仓库提供，含 6 篇示例文章）
+├── database.db             # SQLite 数据库（本地文件，不入库；首次运行自动生成）
 ├── freeze_static.py        # 静态化导出脚本（生成可托管的扁平 HTML + 搜索索引）
 ├── templates/              # Jinja2 模板
 │   ├── base.html           # 浅色版基础模板（含 scripts 插槽）
@@ -146,7 +146,7 @@ python freeze_static.py --out ../blog_static/blog4 --prefix /blog4
 1. **演示级认证**：后台账号、密码与 `SECRET_KEY` 硬编码在 `app.py`，仅适合本地/教学演示，生产环境必须改为环境变量注入并做密码哈希。
 2. **服务端密钥依赖**：云函数通过数据库网关读写 PostgreSQL，依赖控制台的 `TCB_API_KEY`（`service_role`，可绕过 RLS）。真实配置 `cloudbaserc.json` 已被 `.gitignore` 排除、只保留占位符模板 `cloudbaserc.example.json`，切勿把真实密钥提交进仓库。
 3. **留言权限模型与文档差异**：当前环境为 PostgreSQL，没有「集合」概念，原始需求中的「仅创建者可写、所有人可读」落地为：客户端不持有数据库凭据、写入只能经云函数，读取经 `listComments` 开放给匿名访客。
-4. **静态版功能受限**：静态交付版不含后台、留言与真实搜索（搜索改为前端索引匹配）。
+4. **静态版功能受限**：静态交付版不含后台，搜索改为前端索引匹配；文章页虽有留言区，但读写依赖云函数与匿名登录，静态托管环境不一定可用。
 5. **SQLite 持久化风险**：容器重新部署会重置镜像内数据，真实数据需外置或迁移到云数据库。
 6. **留言治理缺失**：无删除、审核、频率限制，仅做长度校验（昵称 20 字、正文 500 字）。
 7. **安全加固未完成**：未引入 CSRF 防护；演示账号密码为弱口令。

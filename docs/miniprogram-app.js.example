@@ -13,14 +13,14 @@ App({
     }
 
     // 关键的一行：指定与环境一致的环境ID
-    wx.cloud.init({ env: '100053993154', traceUser: true });
+    wx.cloud.init({ env: 'blog-d3gd2wmcb82959ac9', traceUser: true });
   },
 
   globalData: {}
 });
 
 // ------------------------------------------------------------
-// 调用示例：提交留言（与 Flask 站点共用 comments 集合）
+// 调用示例：提交留言（与 Flask 站点共用 PostgreSQL comments 表）
 // ------------------------------------------------------------
 // wx.cloud.callFunction({
 //   name: 'addComment',
@@ -29,10 +29,11 @@ App({
 //   console.log('云函数返回：', res.result);
 // });
 //
-// 读取留言（集合权限「所有人可读、仅创建者可写」）：
-// const db = wx.cloud.database();
-// db.collection('comments')
-//   .where({ articleId: '2' })
-//   .orderBy('createdAt', 'desc')
-//   .get()
-//   .then(res => console.log(res.data));
+// 读取留言：当前环境为 PostgreSQL，没有「集合」概念，
+// 客户端不直连数据库，统一调用云函数 listComments 读取：
+// wx.cloud.callFunction({
+//   name: 'listComments',
+//   data: { articleId: '2' }
+// }).then(res => {
+//   console.log('留言列表：', res.result.data);
+// });

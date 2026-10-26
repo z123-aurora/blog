@@ -1,6 +1,6 @@
 网址与环境ID
-静态版（作业交付地址）：https://blog-d3gd2wmcb82969ac9-1511513920.tcloudbaseapp.com/blog4/
-CloudBase 环境ID：100053993154
+静态版（作业交付地址）：https://blog-d3gd2wmcb82959ac9-1511513920.tcloudbaseapp.com/blog4/
+CloudBase 环境ID：blog-d3gd2wmcb82959ac9
 完整动态版（含后台）：https://personal-tech-blog-10060.app.workbuddy.host/?sharecode=ZFCMKOTS27
 后台入口：/login    账号：admin    密码：admin123
 
@@ -14,7 +14,8 @@ init_db.py                    建库与初始化种子数据
 database.db                   SQLite 数据库（本地文件，不入 git 仓库；克隆后运行 app.py 自动重建）
 templates/                    Jinja2 模板（base.html 浅色版 / base_v2.html 深色版）
 static/                       样式表与图片资源
-cloudfunctions/addComment/    云函数：写入留言到 comments 集合
+cloudfunctions/addComment/    云函数：写入留言到 PostgreSQL comments 表
+cloudfunctions/listComments/  云函数：按文章 ID 读取留言列表
 freeze_static.py              静态化导出脚本（生成静态托管用的纯 HTML 站点）
 Dockerfile                    云托管容器镜像定义
 readme.txt                    本说明
