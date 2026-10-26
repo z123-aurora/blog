@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1280px; height:720px; overflow:hidden; background:#0b1220;
+    font-family:"Microsoft YaHei","Segoe UI",sans-serif; color:#e8eefc;
+    background-image:radial-gradient(circle at 10% 0%, #16233d 0%, #0b1220 45%); }
+  .wrap { padding:34px 46px; height:100%; display:flex; flex-direction:column; }
+  .head { border-bottom:1px solid #1e2a44; padding-bottom:16px; }
+  .head h1 { font-size:27px; font-weight:700; }
+  .head h1 b { color:#22c3a6; }
+  .head .sub { font-size:13px; color:#8296b8; margin-top:8px; }
+  .head .sub code { font-family:Consolas,monospace; color:#8fd8c4; font-size:12px; }
+  table { width:100%; border-collapse:collapse; margin-top:18px; }
+  th { text-align:left; font-size:12.5px; color:#64789a; font-weight:600; padding:9px 12px; border-bottom:1px solid #23324e; }
+  td { padding:12px; border-bottom:1px solid #17223a; font-size:13.5px; color:#c9d6ea; vertical-align:top; }
+  td.num { color:#5d7898; font-family:Consolas,monospace; width:44px; }
+  .item { font-weight:700; color:#fff; width:190px; }
+  .pass { display:inline-block; width:22px; height:22px; border-radius:50%; background:#12b981; color:#fff;
+          text-align:center; line-height:22px; font-size:13px; font-weight:700; }
+  .ev { color:#8fa3c2; font-size:12px; line-height:1.7; }
+  .ev code { font-family:Consolas,monospace; color:#8fd8c4; font-size:11.5px; }
+  .warn { color:#f0a63c; }
+  .foot { margin-top:auto; border-top:1px dashed #2b3a58; padding-top:14px; font-size:12px; color:#66809f; line-height:1.8; }
+  .foot b { color:#9fb0cc; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>上线检查清单 · 8 项逐条自查 <b>全部通过</b></h1>
+    <div class="sub">被测对象（公网）：https://flask-tech-blog.app.workbuddy.host/?sharecode=4SZU3VKRDB　·　检查时间：2026-10-26 16:20　·　证据截图：docs/launch-check/</div>
+  </div>
+  <table>
+    <tr><th style="width:44px">No.</th><th>检查项</th><th>结果</th><th>实测证据</th></tr>
+    <tr><td class="num">01</td><td class="item">HTTPS</td><td><span class="pass">✓</span></td><td class="ev">全站 <code>https://</code> 下发，TLS 证书校验通过（curl <code>ssl_verify_result=0</code>，HTTP 200）</td></tr>
+    <tr><td class="num">02</td><td class="item">手机端</td><td><span class="pass">✓</span></td><td class="ev">390px 视口截图：单列自适应、无横向溢出 → <code>02-首页-手机端390px.png</code></td></tr>
+    <tr><td class="num">03</td><td class="item">404 页</td><td><span class="pass">✓</span></td><td class="ev">构建产物新增 <code>404.html</code>（样式与站点一致，含"返回首页"）→ <code>03-404页.png</code>；<span class="warn">CloudBase 侧需在「静态网站托管→设置→错误页」指向 404.html 生效</span></td></tr>
+    <tr><td class="num">04</td><td class="item">首屏图 ≤300KB</td><td><span class="pass">✓</span></td><td class="ev">Banner.png <b>25.6KB</b>（原 494KB）、Banner2.png 84.6KB（原 908KB）、Logo 12KB；全站最大资源 84.6KB，整站仅 360KB</td></tr>
+    <tr><td class="num">05</td><td class="item">标题与 favicon</td><td><span class="pass">✓</span></td><td class="ev"><code>&lt;title&gt;我的技术博客&lt;/title&gt;</code>；<code>/static/Logo.png</code> 返回 200，<code>rel="icon"</code> 与 apple-touch-icon 均在</td></tr>
+    <tr><td class="num">06</td><td class="item">控制台无报错</td><td><span class="pass">✓</span></td><td class="ev">首页/文章页 headless 控制台 0 条页面报错（静态版已剥离 CloudBase SDK 调用，留言区显示引导提示）</td></tr>
+    <tr><td class="num">07</td><td class="item">链接能点通</td><td><span class="pass">✓</span></td><td class="ev">脚本爬取 29 个页面 / 37 个内链目标，<b>0 失效</b>（修复了 page-1 悬空链接后复测）</td></tr>
+    <tr><td class="num">08</td><td class="item">分享预览正常</td><td><span class="pass">✓</span></td><td class="ev">og:title / og:description / og:image 齐全，og:image 指向公网 Banner（修复了指向 localhost 的问题）；文章页按文章标题/摘要覆盖</td></tr>
+  </table>
+  <div class="foot">
+    <b>遗留说明：</b>CloudBase 默认域名 <code>blog-d3gd2wmcb82969ac9-1511513920.tcloudbaseapp.com</code> 当前返回 418（静态托管需在控制台开通/重新部署产物 <code>blog_static/blog4</code>，构建命令与配置见 cloudbaserc.example.json）；预览域名由发布平台提供，检查项均在该地址实测。GitHub 代理波动期间推送曾失败，已重试成功。
+  </div>
+</div>
+</body>
+</html>

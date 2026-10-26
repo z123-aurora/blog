@@ -8,7 +8,8 @@
 
 | 版本 | 地址 | 说明 |
 | --- | --- | --- |
-| 静态交付版 | <https://blog-d3gd2wmcb82959ac9-1511513920.tcloudbaseapp.com/blog4/> | `freeze_static.py` 导出的纯静态站点，可浏览文章、分类、标签、归档，支持前端索引搜索；不含后台与留言（留言区替换为提示），并附带 404 页 |
+| 静态交付版 | <https://blog-d3gd2wmcb82959ac9-1511513920.tcloudbaseapp.com/blog4/> | `freeze_static.py` 导出的纯静态站点（CloudBase 默认域名），可浏览文章、分类、标签、归档，支持前端索引搜索；不含后台与留言（留言区替换为提示），并附带 404 页 |
+| 静态预览版 | <https://flask-tech-blog.app.workbuddy.host/?sharecode=4SZU3VKRDB> | 同一套 `freeze_static.py` 产物的在线预览，8 项上线检查清单在此实测通过 |
 | 动态完整版 | <https://personal-tech-blog-10060.app.workbuddy.host/?sharecode=ZFCMKOTS27> | Flask 服务端实时渲染，功能完整；后台入口 `/login` |
 
 ## 功能列表
