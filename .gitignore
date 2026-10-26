@@ -1,5 +1,36 @@
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ---------- 虚拟环境 ----------
 node_modules/
 venv/
+.venv/
+env/
+ENV/
+
+# ---------- 环境变量与密钥 ----------
 .env
+.env.*
+cloudbaserc.json
+
+# ---------- 本地数据库（克隆后执行 python init_db.py 重建）----------
+database.db
+*.db
+*.db-journal
+*.sqlite3
+
+# ---------- 构建产物 ----------
+dist/
+blog_static/
+*.zip
+
+# ---------- 编辑器与系统 ----------
 .idea/
-__pycache__/
+.vscode/
+.DS_Store
+Thumbs.db

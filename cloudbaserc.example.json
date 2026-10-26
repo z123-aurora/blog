@@ -1,0 +1,30 @@
+{
+  "envId": "<你的 CloudBase 环境 ID>",
+  "functionRoot": "./cloudfunctions",
+  "functions": [
+    {
+      "name": "addComment",
+      "runtime": "Nodejs20.19",
+      "handler": "index.main",
+      "timeout": 10,
+      "memorySize": 256,
+      "installDependency": false,
+      "envVariables": {
+        "TCB_ENV_ID": "<你的 CloudBase 环境 ID>",
+        "TCB_API_KEY": "<在 CloudBase 控制台-环境-访问服务中创建，请勿提交到仓库>"
+      }
+    },
+    {
+      "name": "listComments",
+      "runtime": "Nodejs20.19",
+      "handler": "index.main",
+      "timeout": 10,
+      "memorySize": 256,
+      "installDependency": false,
+      "envVariables": {
+        "TCB_ENV_ID": "<你的 CloudBase 环境 ID>",
+        "TCB_API_KEY": "<同上>"
+      }
+    }
+  ]
+}
