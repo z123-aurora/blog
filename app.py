@@ -417,4 +417,9 @@ def page_not_found(e):
 
 if __name__ == "__main__":
     init_db.init_db()  # 首次运行自动建库
-    app.run(debug=True, host="127.0.0.1", port=5000)
+    # 云端部署时通过 PORT 环境变量指定端口并绑定 0.0.0.0；
+    # 本地开发保持原有 127.0.0.1:5000 + 调试模式不变。
+    if os.environ.get("PORT"):
+        app.run(host="0.0.0.0", port=int(os.environ["PORT"]), debug=False)
+    else:
+        app.run(debug=True, host="127.0.0.1", port=5000)

@@ -1,0 +1,6 @@
+{
+  "name": "addComment",
+  "version": "1.0.0",
+  "description": "写入文章留言到 comments 表",
+  "main": "index.js"
+}

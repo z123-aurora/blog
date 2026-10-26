@@ -2,6 +2,9 @@
 
 {% block title %}{{ article.title }} - 我的技术博客{% endblock %}
 
+{% block og_title %}{{ article.title }} - 我的技术博客{% endblock %}
+{% block og_desc %}{{ article.summary or (article.content | striptags | truncate(120)) }}{% endblock %}
+
 {% block content %}
 <div class="article-page">
     <article class="article-full">
@@ -48,5 +51,25 @@
         </ul>
     </section>
     {% endif %}
+
+    <section class="comments" id="comments" data-article-id="{{ article.id }}">
+        <h3>💬 留言（<span id="comment-count">0</span>）</h3>
+
+        <form class="comment-form" id="comment-form">
+            <input type="text" id="comment-nickname" maxlength="20" placeholder="昵称（可选，默认匿名读者）">
+            <textarea id="comment-content" rows="4" maxlength="500" placeholder="写下你的看法…" required></textarea>
+            <button type="submit" id="comment-submit">发表留言</button>
+            <p class="comment-status" id="comment-status"></p>
+        </form>
+
+        <ul class="comment-list" id="comment-list">
+            <li class="comment-empty">正在加载留言…</li>
+        </ul>
+    </section>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.17.3/cloudbase.full.js"></script>
+<script src="{{ url_for('static', filename='js/comments.js') }}"></script>
 {% endblock %}

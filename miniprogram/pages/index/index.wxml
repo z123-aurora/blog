@@ -1,0 +1,36 @@
+<view class="page">
+  <view class="card">
+    <view class="title">环境：{{envId}}</view>
+    <view class="tip">与 Flask 站点共用同一套云函数与数据库</view>
+  </view>
+
+  <view class="card">
+    <view class="row">
+      <text class="label">昵称</text>
+      <input class="input" placeholder="微信用户" value="{{nickname}}" bindinput="onNicknameInput" />
+    </view>
+    <view class="row">
+      <text class="label">留言</text>
+      <input class="input" placeholder="写点什么…" value="{{content}}" bindinput="onContentInput" />
+    </view>
+    <button class="btn" type="primary" bindtap="submit">提交留言</button>
+  </view>
+
+  <view class="card">
+    <view class="title">留言列表（{{list.length}}）</view>
+    <view wx:if="{{loading}}" class="tip">加载中…</view>
+    <view wx:for="{{list}}" wx:key="id" class="item">
+      <view class="item-head">
+        <text class="nick">{{item.nickname}}</text>
+        <text class="time">{{item.createdAt}}</text>
+      </view>
+      <view class="content">{{item.content}}</view>
+    </view>
+    <view wx:if="{{!loading && list.length === 0}}" class="tip">还没有留言</view>
+  </view>
+
+  <view class="card">
+    <view class="title">调用日志</view>
+    <view wx:for="{{log}}" wx:key="*this" class="log">{{item}}</view>
+  </view>
+</view>

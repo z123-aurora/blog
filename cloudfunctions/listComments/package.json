@@ -1,0 +1,6 @@
+{
+  "name": "listComments",
+  "version": "1.0.0",
+  "description": "读取文章留言列表",
+  "main": "index.js"
+}

@@ -1,0 +1,16 @@
+.git
+.gitignore
+__pycache__
+*.pyc
+.pytest_cache
+tests
+reports
+freeze_static.py
+blog_static
+docs
+*.md
+# 云托管镜像里不需要的东西：云函数源码、静态化产物、CLI 配置
+cloudfunctions
+dist
+cloudbaserc.json
+.workbuddy

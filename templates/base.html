@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}我的技术博客{% endblock %}</title>
+    <meta name="description" content="{{ self.og_desc() }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="个人技术博客">
+    <meta property="og:title" content="{% block og_title %}个人技术博客 - Flask + SQLite{% endblock %}">
+    <meta property="og:description" content="{{ self.og_desc() }}">
+    <meta property="og:image" content="{{ url_for('static', filename='Banner.png', _external=True) }}">
+    {% block og_desc %}基于 Flask + SQLite 的个人技术博客：文章浏览、分类标签、搜索与归档。{% endblock %}
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='Logo.png') }}">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='Logo.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -51,5 +58,6 @@
             <p>© 2026 我的技术博客 · 用 Python + Flask 构建</p>
         </div>
     </footer>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

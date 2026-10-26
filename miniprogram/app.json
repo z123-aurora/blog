@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "pages/index/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "我的技术博客",
+    "navigationBarBackgroundColor": "#1e6cf0",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f6f8fb"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
