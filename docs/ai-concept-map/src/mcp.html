@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1600px; height:640px; overflow:hidden; background:#080d17;
+    font-family:"Microsoft YaHei","Segoe UI",sans-serif; color:#e8eefc;
+    background-image:radial-gradient(circle at 92% 0%, #16233d 0%, #080d17 45%); }
+  .wrap { padding:30px 40px; height:100%; display:flex; flex-direction:column; }
+  .head { display:flex; align-items:baseline; gap:16px; border-bottom:1px solid #1e2a44; padding-bottom:14px; }
+  .head h1 { font-size:26px; font-weight:700; }
+  .head h1 b { color:#22c3a6; }
+  .head .sub { font-size:13px; color:#8296b8; }
+  .main { flex:1; display:flex; gap:20px; margin-top:16px; }
+  .pane { background:#0d1117; border:1px solid #1f2a44; border-radius:10px; position:relative; display:flex; flex-direction:column; }
+  .ph { font-size:13px; color:#9fb0cc; padding:10px 16px; border-bottom:1px solid #1c2842; background:#10182a; border-radius:10px 10px 0 0; }
+  .pb { padding:16px; font-size:13px; line-height:1.8; color:#c9d6ea; }
+
+  .crumb { display:flex; align-items:center; gap:8px; background:#0f172a; border:1px solid #23324e;
+           border-radius:8px; padding:10px 14px; font-size:13px; margin-bottom:14px; }
+  .crumb .g { color:#5b8cff; font-size:15px; }
+  .crumb b { color:#fff; }
+  .crumb .sep { color:#4d5c78; }
+  .crumb .var { color:#f0a63c; font-size:11px; margin-left:auto; }
+  pre.json { font-family:Consolas,monospace; font-size:13px; line-height:1.75; background:#0a0f1a;
+             border:1px solid #1c2842; border-radius:8px; padding:14px 16px; color:#c9d6ea; }
+  .k2 { color:#c792ea; } .s2 { color:#8fd8c4; } .p2 { color:#7d8ca6; }
+  .cap2 { font-size:11.5px; color:#66809f; margin-top:12px; line-height:1.7; }
+
+  pre.tree { font-family:Consolas,"Microsoft YaHei",monospace; font-size:12.8px; line-height:1.82;
+             color:#c9d6ea; white-space:pre; overflow:hidden; }
+  .dir { color:#f0a63c; font-weight:700; }
+  .fl  { color:#8fd8c4; }
+  .cmt { color:#5d7898; font-style:italic; }
+  .logline { margin-top:14px; font-family:Consolas,monospace; font-size:11.8px; color:#7f95b8;
+             background:#0a0f1a; border:1px solid #1c2842; border-radius:8px; padding:10px 14px; line-height:1.7; word-break:break-all; }
+  .state { margin-top:12px; font-size:12.5px; line-height:1.8; color:#c9d6ea; background:#101a2c;
+           border:1px solid #2a3a5c; border-left:3px solid #22c3a6; border-radius:8px; padding:11px 14px; }
+  .state b { color:#22c3a6; }
+
+  .mark { position:absolute; border:1.5px dashed #ff5c5c; border-radius:9px; pointer-events:none; }
+  .badge { position:absolute; width:24px; height:24px; border-radius:50%; background:#ff5c5c; color:#fff;
+           font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center;
+           left:-12px; top:-12px; box-shadow:0 0 0 3px #0d1117; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>落点 ③ ｜ <b>MCP 在 Trae 的哪里配置</b> —— 入口、落盘、以及它到底解决了什么</h1>
+    <div class="sub">左：配置入口与 JSON 写法；右：本机真实存在的落盘目录与运行时日志路径</div>
+  </div>
+
+  <div class="main">
+    <!-- 左：入口 + JSON -->
+    <div class="pane" style="width:730px;">
+      <div class="ph">配置入口（图形界面）与配置格式（JSON）</div>
+      <div class="pb">
+        <div class="crumb" id="entry">
+          <span class="g">⚙</span> Trae <span class="sep">›</span> 设置 <span class="sep">›</span> <b>MCP</b> <span class="sep">›</span> 添加 MCP 服务器
+          <span class="var">不同版本入口略有差异：AI 侧栏 → 智能体 → MCP</span>
+        </div>
+        <pre class="json" id="json">{
+  <span class="s2">"mcpServers"</span>: {
+    <span class="s2">"fetch"</span>: {                       <span class="p2">// 本地进程型（stdio）</span>
+      <span class="k2">"command"</span>: <span class="s2">"npx"</span>,
+      <span class="k2">"args"</span>: [<span class="s2">"-y"</span>, <span class="s2">"mcp-server-fetch"</span>]
+    },
+    <span class="s2">"blog-docs"</span>: {                   <span class="p2">// 远程服务型（HTTP/SSE）</span>
+      <span class="k2">"url"</span>: <span class="s2">"https://mcp.example.com/sse"</span>,
+      <span class="k2">"headers"</span>: { <span class="s2">"Authorization"</span>: <span class="s2">"Bearer &lt;token&gt;"</span> }
+    }
+  }
+}</pre>
+        <div class="cap2" id="cap2">stdio 型给 <b style="color:#c9d6ea">command + args</b>（Trae 负责拉起进程）；HTTP 型给 <b style="color:#c9d6ea">url + headers</b>。添加成功后，该服务器提供的每个工具都会出现在 Agent 的可调用清单里。</div>
+      </div>
+      <div class="mark" data-ref="entry"><span class="badge">1</span></div>
+      <div class="mark" data-ref="json"><span class="badge">1</span></div>
+    </div>
+
+    <!-- 右：落盘 -->
+    <div class="pane" style="flex:1;">
+      <div class="ph">本机落盘（可直接用资源管理器打开核对）</div>
+      <div class="pb">
+<pre class="tree" id="tree"><span class="dir">C:\Users\Administrator\.trae-cn\</span>
+└─ <span class="dir">mcps\</span>                                  <span class="cmt">← MCP / 工具清单的落盘位置</span>
+   ├─ <span class="dir">s_lianxi-3a4d035a\</span>                 <span class="cmt">← 按"工作区"隔离，s_ = workspace 作用域</span>
+   │  └─ solo_agent\integrated_code_mode\
+   │     ├─ <span class="fl">SERVER_METADATA.json</span>          <span class="cmt">服务器元数据</span>
+   │     └─ <span class="fl">tools\Exec.json</span>              <span class="cmt">← 每项能力 = 一个有名字的工具</span>
+   ├─ <span class="dir">s_default-55bd1787\</span>
+   │  └─ …\tools\ <span class="fl">Exec / GenerateImage / GenerateVideo / Schedule</span> …
+   └─ <span class="dir">m_Backup_Docs-b1aef186\</span></pre>
+        <div class="logline" id="logline">运行时日志：C:\Users\Administrator\AppData\Roaming\Trae CN\logs\&lt;会话&gt;\mcp-servers-main.log<br>（每次启动 Trae 都会生成，记录 MCP 服务器的加载与连接过程）</div>
+        <div class="state" id="state"><b>本机现状：</b>mcps\ 里目前只有 Trae 内置工具与工作区作用域缓存，还没有第三方 MCP 服务器——下一步计划：加一个 fetch / filesystem MCP，把"让 Agent 自己查文档"跑通闭环。</div>
+      </div>
+      <div class="mark" data-ref="tree"><span class="badge">2</span></div>
+      <div class="mark" data-ref="state"><span class="badge">3</span></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  document.querySelectorAll('.mark[data-ref]').forEach(function (m) {
+    var e = document.getElementById(m.dataset.ref);
+    if (!e) return;
+    var top = e.offsetTop, h = e.offsetHeight;
+    if (m.dataset.ref === 'json' || m.dataset.ref === 'cap2') { }
+    m.style.top = (top - 4) + 'px';
+    m.style.height = (h + 8) + 'px';
+    m.style.left = '10px'; m.style.right = '12px';
+  });
+})();
+</script>
+</body>
+</html>

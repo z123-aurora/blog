@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>对照课程工具清单回顾：我的一张 AI 概念地图，和它在博客项目里的三处真实落点</title>
+<style>
+  :root { --ink:#1f2733; --sub:#5b6b80; --line:#e3e8ef; --accent:#2b5fd9; --soft:#f5f7fb; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif; color:var(--ink);
+         background:#eef1f6; line-height:1.85; }
+  .page { max-width:960px; margin:32px auto; background:#fff; border:1px solid var(--line);
+          border-radius:14px; padding:52px 64px 60px; box-shadow:0 8px 30px rgba(20,35,60,.06); }
+  h1 { font-size:27px; line-height:1.5; letter-spacing:.3px; }
+  .meta { margin:14px 0 6px; font-size:13.5px; color:var(--sub); }
+  .meta code { background:var(--soft); border:1px solid var(--line); border-radius:5px; padding:1px 7px; font-size:12px; }
+  .quote { border-left:3px solid var(--accent); background:var(--soft); border-radius:0 8px 8px 0;
+           padding:12px 18px; font-size:14px; color:var(--sub); margin:18px 0 8px; }
+  h2 { font-size:20px; margin:44px 0 16px; padding-left:12px; border-left:4px solid var(--accent); }
+  h3 { font-size:17px; margin:30px 0 12px; }
+  p { margin:10px 0; font-size:15px; }
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:14px 0; }
+  th { background:var(--soft); text-align:left; padding:9px 12px; border:1px solid var(--line); font-weight:600; }
+  td { padding:9px 12px; border:1px solid var(--line); vertical-align:top; }
+  td code, p code, li code { font-family:Consolas,monospace; font-size:12.5px; background:var(--soft);
+        border:1px solid var(--line); border-radius:4px; padding:1px 6px; color:#c2452d; word-break:break-all; }
+  figure { margin:20px 0; }
+  figure img { width:100%; border:1px solid var(--line); border-radius:10px; display:block; }
+  figcaption { text-align:center; font-size:12.5px; color:var(--sub); margin-top:9px; }
+  ol, ul { padding-left:26px; margin:10px 0; }
+  li { margin:7px 0; font-size:15px; }
+  li b { color:var(--accent); }
+  pre { background:#0d1117; color:#d6e2f5; border-radius:10px; padding:18px 20px; overflow-x:auto;
+        font-family:Consolas,monospace; font-size:12.8px; line-height:1.8; margin:14px 0; }
+  pre .c { color:#7d8ca6; }
+  .note { font-size:13px; color:var(--sub); background:var(--soft); border:1px dashed var(--line);
+          border-radius:8px; padding:10px 16px; margin-top:8px; }
+  .end { margin-top:46px; padding-top:18px; border-top:1px solid var(--line); font-size:12.5px; color:var(--sub); text-align:center; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>对照课程工具清单回顾：我的一张 AI 概念地图，和它在博客项目里的三处真实落点</h1>
+  <div class="meta">实验场：<code>D:\Trae CN\lianxi\blog</code> —— 个人技术博客（Flask + SQLite + CloudBase 云托管）</div>
+  <div class="quote">方法：不背概念，逐层往自己的项目里"压"——每一层都要找到至少一个能用文件路径核对的落点。</div>
+
+  <h2>一、先回顾：课程工具清单，我重新按"四层"摆了一遍</h2>
+  <p>老师给的 AI 概念地图分四层：<b>模型层、Agent 层、能力层、工程层</b>。我把课程里出现过的工具按这个分层重新归位，并在右两列写上"我在博客项目里的真实用法"和"可核对证据"——归类不重要，落点才重要。</p>
+  <table>
+    <tr><th style="width:74px">层</th><th>课程工具（按类别）</th><th>我在博客项目里的用法</th><th>可核对证据</th></tr>
+    <tr><td><b>模型层</b></td><td>对话模型（可切换的内置模型）、图像生成模型</td><td>读 426 行 <code>app.py</code> 列出 22 处重构点；把 pytest 报错定位到 SQL 占位符；生成 Logo / Banner</td><td><code>REFACTORING.md</code>（22 项清单）、<code>static/Logo.png</code></td></tr>
+    <tr><td><b>Agent 层</b></td><td>AI 编程助手（Trae）、Plan/Ask 模式、任务记忆</td><td>一次任务内完成：读代码 → 列 22 项 → 改 9 个文件 → 跑 70 条测试 → 写重构说明</td><td><code>REFACTORING.md</code>："验证结论：70 条测试全部通过"</td></tr>
+    <tr><td><b>能力层</b></td><td>文件读写、终端执行、浏览器预览、MCP、Git、云部署</td><td>Exec 跑 pytest / docker build；git 5 次提交；CloudBase 云托管 + 云函数留言板</td><td><code>~/.trae-cn/mcps/*/tools/Exec.json</code>、<code>Dockerfile</code>、<code>cloudbaserc.json</code>、<code>cloudfunctions/</code></td></tr>
+    <tr><td><b>工程层</b></td><td>@ 上下文引用、Rules、测试框架、版本控制、部署</td><td><code>@</code> 引用核心文件；<code>.trae/rules/project_rules.md</code> 固化 6 类硬约束；<code>pytest.ini</code> 锁死测试口径</td><td><code>.trae/rules/project_rules.md</code>、<code>pytest.ini</code>、<code>.gitignore</code></td></tr>
+  </table>
+  <p><b>归位时发现的一个错位：</b>我原先把"MCP"当成一个独立工具来记，实际上它不属于任何一层——它是<b>能力层与 Agent 层之间的接口</b>（把外部能力展开成有名字的工具清单）。这就是重画地图的价值。</p>
+
+  <h2>二、我自己的概念地图</h2>
+  <figure>
+    <img src="01-AI概念地图.png" alt="我的AI概念地图：模型层 / Agent层 / 能力层 / 工程层，每层附博客落点与可核对证据">
+    <figcaption>图 1 · 四层一体：每层右侧两格分别是"在博客里的落点"与"可核对证据"</figcaption>
+  </figure>
+  <p>用三句话说清层与层的关系（这是我自己的版本，不是照抄板书）：</p>
+  <ol>
+    <li><b>模型层只有"想"，没有"手"，也没有记忆。</b>它只看得到被塞进上下文窗口的那段文字——所以<b>上下文窗口是模型层的生命线</b>，这也是落点①存在的原因。</li>
+    <li><b>Agent 层把"想"变成"做"</b>：计划 → 行动 → 观察 → 反思的循环。重构任务能无人值守跑完，靠的是这个循环，不是模型更聪明。</li>
+    <li><b>工程层决定下限</b>：同样一个模型，@ 引用什么、Rules 写什么、测试怎么验收，产出能差一个量级。图底部那条反馈回路是关键：<b>验收失败 → 重新规划 → 沉淀成 Rules</b>，下次同类任务不再踩同一个坑。</li>
+  </ol>
+
+  <h2>三、三处真实落点</h2>
+
+  <h3>落点 ①｜上下文窗口：@ 引用了哪些文件</h3>
+  <figure>
+    <img src="02-上下文窗口落点.png" alt="落点1：@引用文件与上下文预算实测表">
+    <figcaption>图 2 · 左：两类真实任务的 @ 引用组合；右：按仓库逐文件实测的上下文开销</figcaption>
+  </figure>
+  <ul>
+    <li><b>Trae 里的位置：</b>对话输入框敲 <code>@</code>，弹出文件/文件夹选择器，选中的对象<b>显式注入</b>本次对话上下文。</li>
+    <li><b>博客里的真实引用：</b>重构任务引用 <code>app.py</code>、<code>tests/test_core.py</code>、<code>pytest.ini</code>；换深色皮肤任务引用 <code>templates/base.html</code>、<code>static/css/style.css</code>。这些文件都真实存在于仓库，体积是脚本逐个实测的。</li>
+    <li><b>自查数字：</b>核心 7 件合计 50,865 字符 ≈ 3 万 token，占 128K 窗口约 23%。<b>窗口不是越满越好</b>——剩下 77% 要留给测试输出和模型的推理空间。</li>
+    <li><b>一个容易忽略的点：</b>没被 @ 的文件（<code>init_db.py</code>、<code>comments.js</code>）会被 Agent 按需自动读取，<b>同样占窗口</b>。所以任务做完开新会话清窗口，是省 token 的第一习惯。</li>
+  </ul>
+
+  <h3>落点 ②｜Rules 写在哪里</h3>
+  <figure>
+    <img src="03-Rules落点.png" alt="落点2：.trae/rules/project_rules.md 规则文件与Trae自动记忆对照">
+    <figcaption>图 3 · 左：项目规则文件（本次补建并随仓库保存）；右下：Trae 自动沉淀的项目记忆</figcaption>
+  </figure>
+  <ul>
+    <li><b>标准答案：</b>项目级规则写在<b>项目根目录</b> <code>.trae/rules/project_rules.md</code>，随 git 提交、队友 clone 即生效；个人级规则在 Trae「设置 → 规则」里配置，只影响本机。</li>
+    <li><b>诚实声明：</b>排查时我发现本仓库此前<b>没有</b>这个文件——规则只以两种"野生形态"存在：Trae 自动沉淀的项目记忆（<code>~/.trae-cn/memory/projects/-d-Trae-CN-lianxi--p2-…/project_memory.md</code>，含 Hard Constraints / Lessons Learned），以及 <code>pytest.ini</code> + <code>tests/conftest.py</code> 里的硬约束。<b>本次实验我把它补建了</b>：内容不是编的，每一条都来自真实踩坑——比如"monkeypatch 必须同时 patch <code>app.DB_PATH</code> 和 <code>init_db.DB_PATH</code>"就是重构时真实翻过的车。</li>
+    <li><b>我的体会：</b>Rules 与 Memory 的分工——<b>手写的 Rules 立规矩（可验收的约束），自动的 Memory 记教训（已经踩过的坑）</b>。规则必须是"能被测试验证的句子"，"代码要规范"这种口号写了等于没写。</li>
+  </ul>
+
+  <h3>落点 ③｜MCP 在 Trae 的哪里配置</h3>
+  <figure>
+    <img src="04-MCP落点.png" alt="落点3：MCP配置入口、JSON格式与本机落盘目录">
+    <figcaption>图 4 · 左：配置入口与 JSON 写法；右：本机真实落盘目录与运行时日志路径</figcaption>
+  </figure>
+  <ul>
+    <li><b>配置入口：</b>Trae「设置 → MCP → 添加 MCP 服务器」（不同版本入口略有差异：AI 侧栏 → 智能体 → MCP）。</li>
+    <li><b>配置格式：</b>本地进程型（stdio）写 <code>command + args</code>；远程服务型写 <code>url + headers</code>。</li>
+    <li><b>本机落盘：</b><code>C:\Users\Administrator\.trae-cn\mcps\</code>，按工作区作用域隔离（<code>s_lianxi-*</code> 就是本项目会话的作用域），里面 <code>SERVER_METADATA.json</code> + <code>tools/*.json</code> 就是"能力被展开成工具清单"的直接证据；运行时日志在 <code>%APPDATA%\Trae CN\logs\&lt;会话&gt;\mcp-servers-main.log</code>。</li>
+    <li><b>本机现状（也诚实写）：</b>目前 <code>mcps\</code> 里只有 Trae 内置工具与作用域缓存，<b>还没有添加第三方 MCP 服务器</b>。下一步：加一个 fetch / filesystem MCP，把"让 Agent 自己查文档"跑通闭环——这一步做完，能力层才算真正点亮。</li>
+  </ul>
+
+  <h2>四、收尾：三句话总结</h2>
+  <ol>
+    <li>概念地图画一次没用，<b>每一层都必须压出一个文件路径</b>，否则只是抄板书。</li>
+    <li>三处落点里最有价值的是落点②的"发现空白"：Rules 没配置本身就是发现——<b>工程层的欠账，补上就是本次实验最大的产出</b>。</li>
+    <li>下一站：给 Trae 配一个真实的 MCP 服务器，把能力层和 Agent 层的接口亲手接一次。</li>
+  </ol>
+
+  <h2>附：任何人都能复现的核对清单</h2>
+<pre><span class="c"># 落点①：统计核心文件的上下文开销</span>
+cd "D:\Trae CN\lianxi\blog" && python -c "print(sum(len(open(f,'rb').read()) for f in ['app.py','static/css/style.css','init_db.py','tests/test_core.py','static/js/comments.js','templates/base.html','pytest.ini']))"
+<span class="c"># → 50865 字符 ≈ 3 万 token</span>
+
+<span class="c"># 落点②：确认规则文件存在</span>
+type "D:\Trae CN\lianxi\blog\.trae\rules\project_rules.md"
+
+<span class="c"># 落点③：确认 MCP 落盘目录</span>
+dir "C:\Users\Administrator\.trae-cn\mcps"</pre>
+
+  <div class="note">说明：图 2 左侧的对话输入区为示意复刻（任务与文件均为本项目真实内容，体积为实测）；图 3 中的规则文件为本次实验补建并已随项目保存。</div>
+  <div class="end">个人技术博客 · AI 概念地图实验 · 2026-10</div>
+</div>
+</body>
+</html>

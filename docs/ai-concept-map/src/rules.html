@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1600px; height:790px; overflow:hidden; background:#080d17;
+    font-family:"Microsoft YaHei","Segoe UI",sans-serif; color:#e8eefc;
+    background-image:radial-gradient(circle at 90% 0%, #16233d 0%, #080d17 45%); }
+  .wrap { padding:30px 40px; height:100%; display:flex; flex-direction:column; }
+  .head { display:flex; align-items:baseline; gap:16px; border-bottom:1px solid #1e2a44; padding-bottom:14px; }
+  .head h1 { font-size:26px; font-weight:700; }
+  .head h1 b { color:#f0a63c; }
+  .head .sub { font-size:13px; color:#8296b8; }
+  .main { flex:1; display:flex; gap:20px; margin-top:16px; }
+
+  /* 编辑器窗口 */
+  .editor { width:930px; background:#0d1117; border:1px solid #1f2a44; border-radius:10px; overflow:hidden; display:flex; flex-direction:column; }
+  .titlebar { display:flex; align-items:center; gap:9px; background:#10182a; padding:9px 14px; border-bottom:1px solid #1c2842; }
+  .dot { width:11px; height:11px; border-radius:50%; }
+  .tab { margin-left:10px; background:#0d1117; border:1px solid #26334f; border-bottom:none; border-radius:6px 6px 0 0; font-size:12px; padding:5px 14px; color:#cfe0ff; }
+  .path { margin-left:auto; font-family:Consolas,monospace; font-size:11.5px; color:#7f95b8; }
+  .code { flex:1; padding:14px 0 8px; font-family:Consolas,"Microsoft YaHei",monospace; font-size:13.5px; line-height:24px; position:relative; }
+  .code > span { display:block; white-space:nowrap; overflow:hidden; }
+  .ln { display:inline-block; width:46px; text-align:right; margin-right:18px; color:#3d4d68; user-select:none; }
+  .cm { color:#7d8ca6; }  .kw { color:#c792ea; }  .st { color:#8fd8c4; }  .hd { color:#5b8cff; font-weight:700; }
+  .tx { color:#d6e2f5; }  .om { color:#4d5c78; font-style:italic; }
+  .mark { position:absolute; left:38px; right:12px; border:1.5px dashed #ff5c5c; border-radius:7px; pointer-events:none; }
+  .badge { position:absolute; width:24px; height:24px; border-radius:50%; background:#ff5c5c; color:#fff;
+           font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center;
+           left:-12px; top:-12px; box-shadow:0 0 0 3px #0d1117; }
+
+  /* 右侧标注 */
+  .side { flex:1; display:flex; flex-direction:column; gap:12px; }
+  .card { background:#0f172a; border:1px solid #23324e; border-radius:10px; padding:14px 16px; }
+  .card .t { display:flex; align-items:center; gap:9px; font-size:14.5px; font-weight:700; margin-bottom:7px; }
+  .card .t i { width:22px; height:22px; border-radius:50%; background:#ff5c5c; color:#fff; font-style:normal;
+               font-size:13px; display:flex; align-items:center; justify-content:center; flex:none; }
+  .card p { font-size:12.5px; line-height:1.75; color:#b9c8e0; }
+  .card code { font-family:Consolas,monospace; font-size:11.5px; color:#8fd8c4; word-break:break-all; }
+  .mini { background:#0d1117; border:1px solid #23324e; border-radius:10px; overflow:hidden; }
+  .mini .mh { background:#10182a; font-size:12px; color:#9fb0cc; padding:8px 14px; border-bottom:1px solid #1c2842; }
+  .mini .mh code { color:#f0a63c; font-size:10.5px; display:block; margin-top:3px; word-break:break-all; font-family:Consolas,monospace; }
+  .mini pre { font-family:Consolas,monospace; font-size:11.5px; line-height:1.8; color:#c9d6ea; padding:10px 14px; }
+  .note { font-size:11.5px; color:#66809f; line-height:1.7; }
+</style>
+<script>
+window.addEventListener('load', function () {
+  var lines = document.querySelectorAll('.code > span');
+  document.querySelectorAll('.mark').forEach(function (m) {
+    var r = m.dataset.lines.split('-');
+    var a = lines[+r[0] - 1], b = lines[+r[1] - 1];
+    if (a && b) {
+      var t = a.offsetTop;
+      m.style.top = t + 'px';
+      m.style.height = (b.offsetTop + b.offsetHeight - t) + 'px';
+    }
+  });
+});
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>落点 ② ｜ <b>Rules 写在哪里</b> —— 项目根的 .trae/rules/</h1>
+    <div class="sub">左：我为本项目补建并提交的规则文件（真实文件）；右下：Trae 自动沉淀的项目记忆（本机真实存在）</div>
+  </div>
+
+  <div class="main">
+    <!-- 编辑器 -->
+    <div class="editor">
+      <div class="titlebar">
+        <span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span>
+        <span class="tab">project_rules.md</span>
+        <span class="path">D:\Trae CN\lianxi\blog\.trae\rules\project_rules.md</span>
+      </div>
+      <div class="code" id="code">
+<span><span class="ln">1</span><span class="tx">---</span></span>
+<span><span class="ln">2</span><span class="kw">description</span><span class="tx">: 个人技术博客（Flask + SQLite + CloudBase）项目规则</span></span>
+<span><span class="ln">3</span><span class="kw">alwaysApply</span><span class="tx">: </span><span class="st">true</span></span>
+<span><span class="ln">4</span><span class="tx">---</span></span>
+<span><span class="ln">5</span><span class="tx"> </span></span>
+<span><span class="ln">6</span><span class="hd"># 项目规则 · 个人技术博客</span></span>
+<span><span class="ln">7</span><span class="cm">&gt; 位置：&lt;项目根&gt;/.trae/rules/project_rules.md（随仓库提交，团队共享）</span></span>
+<span><span class="ln">8</span><span class="tx"> </span></span>
+<span><span class="ln">9</span><span class="hd">## 1. 技术栈与边界</span></span>
+<span><span class="ln">10</span><span class="tx">- 依赖锁定 requirements.txt（flask、markdown）</span></span>
+<span><span class="ln">11</span><span class="tx">- </span><span class="st">不得引入 ORM、前端框架、构建工具</span></span>
+<span><span class="ln">12</span><span class="tx">- 数据库文件 database.db </span><span class="st">禁止删除或重建</span></span>
+<span><span class="ln">13</span><span class="om">…（2. 目录职责表，此处省略）…</span></span>
+<span><span class="ln">14</span><span class="hd">## 3. 测试硬约束（最高优先级）</span></span>
+<span><span class="ln">15</span><span class="tx">- 所有测试必须用 tmp_path 临时库，monkeypatch 分别 patch</span></span>
+<span><span class="ln">16</span><span class="tx">&nbsp;&nbsp;</span><span class="st">app.DB_PATH 与 init_db.DB_PATH（两处都要 patch）</span></span>
+<span><span class="ln">17</span><span class="tx">- 共享夹具只写在 tests/conftest.py</span></span>
+<span><span class="ln">18</span><span class="tx">- 交付前 pytest 必须全绿（当前基线：70 passed）</span></span>
+<span><span class="ln">19</span><span class="om">…（4. 代码规范，此处省略）…</span></span>
+<span><span class="ln">20</span><span class="hd">## 5. 交付与提交</span></span>
+<span><span class="ln">21</span><span class="tx">- 重构类改动单独写 REFACTORING.md：改了什么 / 为什么改 / 收益</span></span>
+<span><span class="ln">22</span><span class="tx">- 提交信息格式：type: 摘要（feat / fix / refactor / test / docs）</span></span>
+<span><span class="ln">23</span><span class="om">…（6. 回复风格，此处省略）…</span></span>
+      </div>
+      <!-- 红框标注 -->
+      <div class="mark" data-lines="1-4"><span class="badge">1</span></div>
+      <div class="mark" data-lines="14-18"><span class="badge">2</span></div>
+      <div class="mark" data-lines="7-7"><span class="badge">3</span></div>
+    </div>
+
+    <!-- 标注 -->
+    <div class="side">
+      <div class="card">
+        <div class="t"><i>1</i>规则头 = 注入开关</div>
+        <p><code>alwaysApply: true</code> 表示这条规则<strong>每次会话开始自动进入模型上下文</strong>，不用我在提问里重复交代。改这个文件，等于改 AI 在本项目里的默认行为。</p>
+      </div>
+      <div class="card">
+        <div class="t"><i>2</i>规则必须是可验收的约束</div>
+        <p>「必须用 tmp_path 临时库、两处 DB_PATH 都要 patch、pytest 全绿才交付」——每一条都能被测试验证。来自真实踩坑：默认参数绑定 DB_PATH 导致 monkeypatch 失效。</p>
+      </div>
+      <div class="card">
+        <div class="t"><i>3</i>落点 = 项目根，随 git 走</div>
+        <p>路径固定在 <code>.trae/rules/project_rules.md</code>，和代码一起提交，队友 clone 下来就生效。这就是"规则写在哪里"的答案：<strong>不写进对话，写进仓库。</strong></p>
+      </div>
+      <div class="mini">
+        <div class="mh">对照证据：Trae 自动沉淀的项目记忆（另一处"规则"形态）
+          <code>C:\Users\Administrator\.trae-cn\memory\projects\-d-Trae-CN-lianxi--p2-…\project_memory.md</code></div>
+        <pre>## Hard Constraints
+- Testing must use temporary database...
+- Test cases must be isolated with fixtures...
+## Lessons Learned
+- Default parameters in create_connection() bound
+  DB_PATH at definition time...</pre>
+      </div>
+      <div class="note">区分：手写的 Rules（左，随仓库）与自动记忆 Memory（右下，只在本机）。前者立规矩，后者记教训；两者都是工程层"把经验固化"的手段。个人级规则则在 Trae「设置 → 规则」中配置。</div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var lines = document.querySelectorAll('.code > span');
+  document.querySelectorAll('.mark').forEach(function (m) {
+    var r = m.dataset.lines.split('-');
+    var a = lines[+r[0] - 1], b = lines[+r[1] - 1];
+    if (a && b) {
+      var t = a.offsetTop;
+      m.style.top = t + 'px';
+      m.style.height = (b.offsetTop + b.offsetHeight - t) + 'px';
+    }
+  });
+})();
+</script>
+</body>
+</html>

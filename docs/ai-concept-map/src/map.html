@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1600px; height:860px; overflow:hidden;
+    background:#080d17;
+    font-family:"Microsoft YaHei","Segoe UI",sans-serif;
+    color:#e8eefc;
+    background-image:radial-gradient(circle at 15% 0%, #16233d 0%, #080d17 45%),
+                     radial-gradient(circle at 95% 100%, #131c30 0%, rgba(8,13,23,0) 40%);
+  }
+  .wrap { padding:38px 46px 30px; height:100%; display:flex; flex-direction:column; }
+
+  /* 顶部 */
+  .head { display:flex; align-items:flex-end; justify-content:space-between; border-bottom:1px solid #1e2a44; padding-bottom:18px; }
+  .head h1 { font-size:34px; letter-spacing:1px; font-weight:700; }
+  .head h1 span { color:#5b8cff; }
+  .head .sub { font-size:14px; color:#8296b8; margin-top:9px; letter-spacing:.5px; }
+  .head .tag { font-size:12px; color:#5b8cff; border:1px solid #2b4272; background:#0e1930; border-radius:20px; padding:7px 15px; }
+
+  /* 主体网格 */
+  .grid { flex:1; display:grid; grid-template-columns: 1fr 118px; gap:18px; margin-top:18px; }
+  .bands { display:flex; flex-direction:column; gap:13px; }
+
+  .band { display:grid; grid-template-columns: 236px 1fr; background:linear-gradient(90deg,#0f172a 0%,#111a2d 100%);
+          border:1px solid #1c2842; border-left:4px solid var(--c); border-radius:10px; overflow:hidden; }
+  .band .left { padding:16px 18px 14px 20px; border-right:1px dashed #1f2c48; }
+  .band .no { font-size:11px; letter-spacing:2px; color:var(--c); font-weight:700; }
+  .band .name { font-size:21px; font-weight:700; margin-top:5px; }
+  .band .en { font-size:11px; color:#6b7f9f; letter-spacing:1.4px; margin-top:3px; text-transform:uppercase; }
+  .band .duty { font-size:12px; color:#9fb0cc; line-height:1.7; margin-top:10px; }
+  .band .right { display:grid; grid-template-columns: 1.15fr 1.1fr 0.95fr; gap:0; }
+  .cell { padding:14px 16px; }
+  .cell + .cell { border-left:1px solid #16223a; }
+  .k { font-size:10.5px; letter-spacing:1px; color:#64789a; margin-bottom:6px; }
+  .cell p { font-size:12.5px; line-height:1.72; color:#c9d6ea; }
+  .cell .hl { color:#fff; font-weight:600; }
+  .cell .ev { font-family:"Consolas","Microsoft YaHei",monospace; font-size:11.5px; color:#8fd8c4; line-height:1.75; }
+
+  /* 右侧贯穿轴 */
+  .axis { display:flex; flex-direction:column; gap:13px; }
+  .axis .col { flex:1; border:1px dashed #2b3a58; border-radius:10px; background:#0c1424;
+               display:flex; align-items:center; justify-content:center; }
+  .axis .col span { writing-mode:vertical-rl; font-size:13px; letter-spacing:5px; color:#7f95b8; }
+  .axis .col.hot { border-color:#3b2f6b; background:#12102a; }
+  .axis .col.hot span { color:#b6a3ff; }
+
+  /* 底部 */
+  .foot { margin-top:16px; display:flex; align-items:center; gap:14px; font-size:12.5px; color:#93a6c4; }
+  .foot .pill { border:1px solid #23324e; background:#0d1626; border-radius:6px; padding:8px 13px; }
+  .foot .arrow { color:#f0a63c; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <div>
+      <h1>我的 AI 概念地图 · <span>四层一体</span></h1>
+      <div class="sub">以「个人技术博客」（Flask + SQLite + CloudBase，D:\Trae CN\lianxi\blog）为唯一实验场，逐层压实到文件</div>
+    </div>
+    <div class="tag">人定目标 → 四层协作 → 产物可验收</div>
+  </div>
+
+  <div class="grid">
+    <div class="bands">
+
+      <!-- 1 模型层 -->
+      <div class="band" style="--c:#4f8cff">
+        <div class="left">
+          <div class="no">LAYER 01</div>
+          <div class="name">模型层</div>
+          <div class="en">Model</div>
+          <div class="duty">能力本体：负责「想」。语言理解、代码生成、多模态识别。</div>
+        </div>
+        <div class="right">
+          <div class="cell">
+            <div class="k">这一层在做什么</div>
+            <p>把自然语言与代码当成同一个序列来预测。它<span class="hl">没有记忆、没有手</span>，只看得到被塞进上下文窗口的那一段文字。</p>
+          </div>
+          <div class="cell">
+            <div class="k">在博客里的落点</div>
+            <p>读完 426 行 <span class="hl">app.py</span> 列出 22 处命名/结构问题；把 pytest 报错定位到 SQL 占位符；生成站点 Logo 与 Banner 图。</p>
+          </div>
+          <div class="cell">
+            <div class="k">可核对证据</div>
+            <div class="ev">REFACTORING.md（22 项清单）<br>static/Logo.png<br>tests/ 70 passed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 Agent 层 -->
+      <div class="band" style="--c:#9b6bff">
+        <div class="left">
+          <div class="no">LAYER 02</div>
+          <div class="name">Agent 层</div>
+          <div class="en">Agent</div>
+          <div class="duty">把「想」变成「做」：拆解目标、调用工具、看结果、再修正。</div>
+        </div>
+        <div class="right">
+          <div class="cell">
+            <div class="k">这一层在做什么</div>
+            <p>循环：<span class="hl">计划 → 行动 → 观察 → 反思</span>。它决定了「一次任务能不能无人值守跑完」，而不只是答一句话。</p>
+          </div>
+          <div class="cell">
+            <div class="k">在博客里的落点</div>
+            <p>一次重构任务内完成：读代码 → 列 22 项 → 改 9 个文件 → 跑 70 条测试 → 产出 REFACTORING.md，中途不换人。</p>
+          </div>
+          <div class="cell">
+            <div class="k">可核对证据</div>
+            <div class="ev">REFACTORING.md<br>「验证结论：70 条测试全部通过」<br>project_memory.md 的 Lessons Learned</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 能力层 -->
+      <div class="band" style="--c:#22c3a6">
+        <div class="left">
+          <div class="no">LAYER 03</div>
+          <div class="name">能力层</div>
+          <div class="en">Capability</div>
+          <div class="duty">模型之外的「手脚」：文件、终端、浏览器、图像、MCP、Git、云。</div>
+        </div>
+        <div class="right">
+          <div class="cell">
+            <div class="k">这一层在做什么</div>
+            <p>MCP 把每一项外部能力<span class="hl">展开成一个有名字、有参数的工具</span>，Agent 靠工具名调用——这是「会说」和「能干」的分界线。</p>
+          </div>
+          <div class="cell">
+            <div class="k">在博客里的落点</div>
+            <p>Exec 跑 pytest / docker build；图像工具出视觉素材；git 5 次提交；CloudBase 云托管 + 云函数写留言。</p>
+          </div>
+          <div class="cell">
+            <div class="k">可核对证据</div>
+            <div class="ev">~/.trae-cn/mcps/*/tools/Exec.json<br>git log（5 commits）<br>Dockerfile、cloudbaserc.json</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 工程层 -->
+      <div class="band" style="--c:#f0a63c">
+        <div class="left">
+          <div class="no">LAYER 04</div>
+          <div class="name">工程层</div>
+          <div class="en">Engineering</div>
+          <div class="duty">让前三层「可复现、可交接、不返工」的约束与流程。</div>
+        </div>
+        <div class="right">
+          <div class="cell">
+            <div class="k">这一层在做什么</div>
+            <p>上下文工程（@ 引用谁、裁掉谁）、Rules、Spec/Plan、测试验收、版本控制、文档。同一模型，工程层不同，产出差一个量级。</p>
+          </div>
+          <div class="cell">
+            <div class="k">在博客里的落点</div>
+            <p><span class="hl">@ 引用</span> app.py + base.html + pytest.ini 作为显式上下文；<span class="hl">.trae/rules/project_rules.md</span> 固化 6 类硬约束；pytest.ini 锁死测试口径。</p>
+          </div>
+          <div class="cell">
+            <div class="k">可核对证据</div>
+            <div class="ev">.trae/rules/project_rules.md<br>pytest.ini（testpaths/addopts）<br>REFACTORING.md、readme.txt</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="axis">
+      <div class="col"><span>上下文：进得来</span></div>
+      <div class="col hot"><span>反馈：回得去</span></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="pill">验收失败</div>
+    <div class="arrow">→</div>
+    <div class="pill">Agent 重新规划（层 ②）</div>
+    <div class="arrow">→</div>
+    <div class="pill">沉淀成 Rules / 记忆（层 ④）</div>
+    <div class="arrow">→</div>
+    <div class="pill" style="border-color:#3b4b6b;color:#dfe8f7">下次同类任务不再踩同一个坑</div>
+    <div style="margin-left:auto;color:#66809f;font-size:12px">产物 = 可运行的博客 + 可复现的工程 + 可解释的过程</div>
+  </div>
+
+</div>
+</body>
+</html>

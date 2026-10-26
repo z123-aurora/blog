@@ -1,0 +1,38 @@
+// ============================================================
+// 小程序接入同一环境后端的改动（对应实验第 9 项）
+// 文件：miniprogram/app.js
+// 只需在 onLaunch 里加一行 wx.cloud.init，即可复用同一环境下
+// 的云函数、数据库与存储，后端完全不需要重写。
+// ============================================================
+
+App({
+  onLaunch: function () {
+    if (!wx.cloud) {
+      console.error('请使用 2.2.3 或以上的基础库以使用云能力');
+      return;
+    }
+
+    // 关键的一行：指定与环境一致的环境ID
+    wx.cloud.init({ env: '100053993154', traceUser: true });
+  },
+
+  globalData: {}
+});
+
+// ------------------------------------------------------------
+// 调用示例：提交留言（与 Flask 站点共用 comments 集合）
+// ------------------------------------------------------------
+// wx.cloud.callFunction({
+//   name: 'addComment',
+//   data: { articleId: '2', nickname: '微信用户', content: '写得很清楚！' }
+// }).then(res => {
+//   console.log('云函数返回：', res.result);
+// });
+//
+// 读取留言（集合权限「所有人可读、仅创建者可写」）：
+// const db = wx.cloud.database();
+// db.collection('comments')
+//   .where({ articleId: '2' })
+//   .orderBy('createdAt', 'desc')
+//   .get()
+//   .then(res => console.log(res.data));
