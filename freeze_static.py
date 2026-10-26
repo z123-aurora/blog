@@ -27,6 +27,7 @@ from app import app, DB_PATH, POSTS_PER_PAGE  # noqa: E402
 
 OUT_DIR = None
 PREFIX = ""
+BASE_URL = ""
 
 
 def db():
@@ -147,7 +148,37 @@ def rewrite_links(html):
     def repl(m):
         mapped = map_link(m.group(2))
         return m.group(1) + (mapped if mapped is not None else m.group(2)) + m.group(3)
-    return ATTR_RE.sub(repl, html)
+    html = ATTR_RE.sub(repl, html)
+    # test_client 渲染时 _external=True 会得到 http://localhost，
+    # 提供 --base-url 时把 og:image 等绝对地址换成真实公网地址
+    if BASE_URL:
+        html = html.replace("http://localhost", BASE_URL.rstrip("/"))
+    return html
+
+
+COMMENTS_NOTE_JS = """
+<script>
+(function () {
+  var root = document.getElementById("comments");
+  if (root) {
+    root.innerHTML = '<div class="empty-state">💬 留言功能在动态版开放；当前为静态托管版，仅展示文章内容。</div>';
+  }
+})();
+</script>
+"""
+
+
+def strip_comments(html):
+    """静态版没有后端：移除 CloudBase SDK 调用，留言区替换为提示。"""
+    html = re.sub(r'<script src="https://static\.cloudbase\.net/[^"]*"></script>\s*', "", html)
+    html = re.sub(r'<script src="[^"]*js/comments\.js"></script>\s*', "", html)
+    start = html.find('<section class="comments"')
+    if start != -1:
+        end = html.find("</section>", start)
+        if end != -1:
+            html = html[:start] + html[end + len("</section>"):]
+            html = html.replace("</body>", COMMENTS_NOTE_JS + "</body>")
+    return html
 
 
 SEARCH_JS = """
@@ -233,13 +264,16 @@ def build_search_index():
 
 
 def main():
-    global OUT_DIR, PREFIX
+    global OUT_DIR, PREFIX, BASE_URL
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", required=True, help="静态站点输出目录")
     parser.add_argument("--prefix", default="/blog4",
                         help="部署子路径前缀（站点将被上传到该目录下）")
+    parser.add_argument("--base-url", default="",
+                        help="站点公网地址（https://...），用于改写 og:image 等绝对链接")
     args = parser.parse_args()
     PREFIX = args.prefix.rstrip("/")
+    BASE_URL = args.base_url.strip()
     OUT_DIR = os.path.abspath(args.out)
     os.makedirs(OUT_DIR, exist_ok=True)
 
@@ -255,12 +289,19 @@ def main():
                 print(f"  [跳过] {url} -> HTTP {resp.status_code}")
                 continue
             html = rewrite_links(resp.get_data(as_text=True))
+            html = strip_comments(html)
             rel = url_to_file(url)
             dest = os.path.join(OUT_DIR, rel)
             os.makedirs(os.path.dirname(dest) or OUT_DIR, exist_ok=True)
             with open(dest, "w", encoding="utf-8", newline="\n") as f:
                 f.write(html)
             print(f"  [OK] {url} -> {rel}")
+
+        # 404 页：请求一个不存在的路径，拿到 Flask 的 404 渲染结果
+        resp404 = client.get("/__no_such_page__")
+        with open(os.path.join(OUT_DIR, "404.html"), "w", encoding="utf-8", newline="\n") as f:
+            f.write(strip_comments(rewrite_links(resp404.get_data(as_text=True))))
+        print("  [OK] 404.html 已生成（静态托管控制台可将其设为错误页）")
     finally:
         restore_views(views_before)
 

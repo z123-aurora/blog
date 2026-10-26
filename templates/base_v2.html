@@ -10,7 +10,8 @@
     <meta property="og:title" content="{% block og_title %}个人技术博客 - Flask + SQLite{% endblock %}">
     <meta property="og:description" content="{{ self.og_desc() }}">
     <meta property="og:image" content="{{ url_for('static', filename='Banner2.png', _external=True) }}">
-    {% block og_desc %}基于 Flask + SQLite 的个人技术博客（深色科技风版本）：文章浏览、分类标签、搜索与归档。{% endblock %}
+    <!-- og_desc 默认文案（子模板可覆盖；self.og_desc() 复用于 description 与 og:description） -->
+    <!-- {% block og_desc %}基于 Flask + SQLite 的个人技术博客（深色科技风版本）：文章浏览、分类标签、搜索与归档。{% endblock %} -->
     <!-- 版本二：先加载公共样式，再用 style_v2.css 做深色赛博风覆盖；原 style.css 未改动 -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='Logo2.png') }}">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='Logo2.png') }}">
