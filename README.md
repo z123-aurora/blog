@@ -33,7 +33,7 @@
 
 工程能力：
 
-- pytest 测试 70 条用例，全部通过
+- pytest 测试 72 条用例，全部通过
 - `freeze_static.py` 静态化导出，供 CloudBase 静态网站托管
 - Dockerfile 容器化部署（监听 `PORT` 环境变量，默认 8080）
 - 微信小程序接入示例（`miniprogram/`，复用同一 CloudBase 环境）
@@ -113,7 +113,7 @@ pip install -r requirements-dev.txt
 pytest
 ```
 
-测试通过 `tmp_path` 临时库 + `monkeypatch` 替换 `DB_PATH`，不会读写真实的 `database.db`；当前基线为 **70 passed**。
+测试通过 `tmp_path` 临时库 + `monkeypatch` 替换 `DB_PATH`，不会读写真实的 `database.db`；当前基线为 **72 passed**。
 
 ### 3. Docker 运行
 
