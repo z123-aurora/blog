@@ -2,9 +2,8 @@
 """后台测试：登录保护、文章增删改、分类管理
 
 注意（以 app.py 真实行为为准）：
-    _save_article() 校验失败时只 flash + return，路由随后仍会
-    redirect 到 /admin。因此「缺标题」类用例的状态码是 302，
-    需要 follow_redirects=True 才能看到错误提示。
+    _save_article() 校验失败时返回 False，路由不再重定向，而是
+    重新渲染表单（HTTP 200）并保留用户输入；只有校验通过才 302。
 """
 import re
 import sqlite3
@@ -202,6 +201,24 @@ class TestCreateArticle:
             follow_redirects=True,
         )
         assert "标题、内容和分类不能为空" in response_text(resp)
+        assert _count(test_db, "articles") == 6
+
+    def test_create_article_nonexistent_category_rejected(
+        self, logged_in_client, test_db
+    ):
+        """意图：分类 ID 不存在时应提示错误而不是触发外键异常（500）。"""
+        resp = logged_in_client.post(
+            "/admin/article/new",
+            data={
+                "title": "坏分类文章",
+                "content": "正文",
+                "category_id": "99999",
+                "tags": "",
+            },
+            follow_redirects=True,
+        )
+        assert resp.status_code == 200
+        assert "所选分类不存在" in response_text(resp)
         assert _count(test_db, "articles") == 6
 
     def test_create_article_without_tags(self, logged_in_client, test_db):

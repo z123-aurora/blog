@@ -252,20 +252,28 @@ def tag(tag_id):
     )
 
 
+def _like_pattern(keyword):
+    """把用户关键词转成 LIKE 模式，转义 %/_，避免被当成通配符。"""
+    escaped = keyword.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+    return f"%{escaped}%"
+
+
 @app.route("/search")
 def search():
     keyword = request.args.get("q", "").strip()
     page = request.args.get("page", 1, type=int)
     articles, page, pages, total = [], 1, 1, 0
     if keyword:
-        like = f"%{keyword}%"
+        like = _like_pattern(keyword)
         query_params = (like, like, like)
         list_sql = """SELECT a.*, c.name AS category_name FROM articles a
             LEFT JOIN categories c ON c.id = a.category_id
-            WHERE a.title LIKE ? OR a.summary LIKE ? OR a.content LIKE ?
+            WHERE a.title LIKE ? ESCAPE '\\' OR a.summary LIKE ? ESCAPE '\\'
+               OR a.content LIKE ? ESCAPE '\\'
             ORDER BY a.created_at DESC, a.id DESC"""
         count_sql = """SELECT COUNT(*) FROM articles
-            WHERE title LIKE ? OR summary LIKE ? OR content LIKE ?"""
+            WHERE title LIKE ? ESCAPE '\\' OR summary LIKE ? ESCAPE '\\'
+               OR content LIKE ? ESCAPE '\\'"""
         total = get_total_count(count_sql, query_params)
         items, page, pages = fetch_paginated_rows(list_sql, query_params, page, total)
         articles = items
@@ -388,6 +396,10 @@ def _save_article(article_id):
     if not title or not content or not category_id:
         flash("标题、内容和分类不能为空", "error")
         return False
+    # category_id 来自表单，必须确认分类真实存在，否则触发外键约束导致 500
+    if query_one("SELECT id FROM categories WHERE id = ?", (category_id,)) is None:
+        flash("所选分类不存在", "error")
+        return False
     db = get_db()
     if article_id is None:
         cur = db.execute(
@@ -419,9 +431,12 @@ def _save_article(article_id):
 def admin_article_delete(article_id):
     db = get_db()
     db.execute("DELETE FROM article_tags WHERE article_id = ?", (article_id,))
-    db.execute("DELETE FROM articles WHERE id = ?", (article_id,))
+    cur = db.execute("DELETE FROM articles WHERE id = ?", (article_id,))
     db.commit()
-    flash("文章已删除", "success")
+    if cur.rowcount:
+        flash("文章已删除", "success")
+    else:
+        flash("文章不存在或已被删除", "error")
     return redirect(url_for("admin"))
 
 

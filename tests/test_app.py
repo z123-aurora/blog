@@ -163,6 +163,12 @@ class TestSearch:
         assert resp.status_code == 200
         assert "Flask 入门" in response_text(resp)
 
+    def test_search_percent_is_literal(self, client):
+        """意图：% 按字面匹配，不应被当成通配符返回全部文章。"""
+        resp = client.get("/search", query_string={"q": "%"})
+        assert resp.status_code == 200
+        assert "没有找到" in response_text(resp)
+
 
 class TestArchivesAndErrors:
     """归档页与全局 404。"""
