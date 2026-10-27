@@ -8,7 +8,7 @@
 
 | 版本 | 地址 | 说明 |
 | --- | --- | --- |
-| 静态交付版 | <https://blog-d3gd2wmcb82959ac9-1511513920.tcloudbaseapp.com/blog4/> | `freeze_static.py` 导出的纯静态站点（CloudBase 默认域名），可浏览文章、分类、标签、归档，支持前端索引搜索；不含后台与留言（留言区替换为提示），并附带 404 页 |
+| 静态交付版 | <https://blog-d3gd2wmcb82959ac9-1511513920.tcloudbaseapp.com/blog4/> | `freeze_static.py` 导出的纯静态站点（CloudBase 默认域名，**需在控制台开通静态托管并上传 `blog_static/blog4/` 后生效**），可浏览文章、分类、标签、归档，支持前端索引搜索；不含后台与留言（留言区替换为提示），并附带 404 页 |
 | 静态预览版 | <https://flask-tech-blog.app.workbuddy.host/?sharecode=4SZU3VKRDB> | 同一套 `freeze_static.py` 产物的在线预览，8 项上线检查清单在此实测通过 |
 | 动态完整版 | <https://personal-tech-blog-10060.app.workbuddy.host/?sharecode=ZFCMKOTS27> | Flask 服务端实时渲染，功能完整；后台入口 `/login` |
 
@@ -127,10 +127,10 @@ docker run -p 8080:8080 -e PORT=8080 blog
 ### 4. 静态站导出
 
 ```powershell
-python freeze_static.py --out ../blog_static/blog4 --prefix /blog4
+python freeze_static.py --out ../blog_static/blog4 --prefix /blog4 --base-url https://blog-d3gd2wmcb82959ac9-1511513920.tcloudbaseapp.com
 ```
 
-产物为扁平的 `.html` 文件、`search-index.json` 与 `static/`，上传到 CloudBase 静态托管的 `blog4/` 目录即可。
+产物为扁平的 `.html` 文件、`search-index.json` 与 `static/`，上传到 CloudBase 静态托管的 `blog4/` 目录即可。`--base-url` 用于把 `og:image` 等分享元信息重写为线上绝对地址（缺省时保持相对路径，分享卡片会裂图）。
 
 ### 5. 留言功能配置（CloudBase）
 
@@ -151,7 +151,7 @@ python freeze_static.py --out ../blog_static/blog4 --prefix /blog4
 5. **SQLite 持久化风险**：容器重新部署会重置镜像内数据，真实数据需外置或迁移到云数据库。
 6. **留言治理缺失**：无删除、审核、频率限制，仅做长度校验（昵称 20 字、正文 500 字）。
 7. **安全加固未完成**：未引入 CSRF 防护；演示账号密码为弱口令。
-8. **测试覆盖边界**：70 条用例只覆盖 Flask 后端，云函数与前端留言逻辑没有自动化测试。
+8. **测试覆盖边界**：72 条用例只覆盖 Flask 后端，云函数与前端留言逻辑没有自动化测试。
 
 后续计划：
 
